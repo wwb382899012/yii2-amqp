@@ -49,7 +49,7 @@ class Transfer extends WebBaseAction
             $service = new SendMqService();
             $res = $service->sendNormalMessage($messageData);
             if ($res) {
-                echo   '生产mq消息一条'."<br />".$content;
+                echo   '生产mq消息一条'."<br />".$content; 
             }
 
 
