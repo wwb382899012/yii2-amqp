@@ -14,7 +14,7 @@ use core\extensions\amqp\Publish;
 use core\providers\user\entities\UserEntity;
 use core\providers\BaseEntity;
 
-class DemoList extends WebBaseAction
+class Normal extends WebBaseAction
 {
     public $checkParams = [
         ['page', 'default', '1'],
@@ -29,7 +29,7 @@ class DemoList extends WebBaseAction
             $trans = UserEntity::beginTransaction();
             $this->checkParams();
             $user = UserEntity::findOne(['id' => '1', 'is_deleted' => BaseEntity::UN_DELETED]);
-            $user->user_name = 'wwww';
+            $user->user_name = 'A';
             $user->save();
             $trans->commit();
 

@@ -11,7 +11,7 @@ namespace console\controllers\consume;
 use core\providers\message\services\ConsumeMqService;
 use yii\base\Action;
 
-class ConsumeTransfer extends Action
+class ConsumeTransferTwo extends Action
 {
     public function run()
     {
@@ -20,7 +20,7 @@ class ConsumeTransfer extends Action
             //1、自动确认
             //$service->consumeMessage(ConsumeMqService::CONSUME_BUSINESS_TYPE_TRANSFER, true);
             //2、手动确认
-            $service->consumeMessage(ConsumeMqService::CONSUME_BUSINESS_TYPE_TRANSFER, false);
+            $service->consumeMessage(ConsumeMqService::CONSUME_BUSINESS_TYPE_TRANSFER_TWO, false);
         } catch (\Exception $e) {
             \Yii::error($e);
             echo '消费异常：' . $e->getMessage();

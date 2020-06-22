@@ -38,11 +38,11 @@ class SendMqService extends BaseService
      * @return bool
      * @throws \Exception
      */
-    public function sendTransferMessage($data)
+    public function sendTransferMessage($data, $durable = false)
     {
         try {
             $public = new Publish();
-            $res = $public->sendMessage($data);
+            $res = $public->sendMessage($data, $durable);
             if ($res) {
                 return true;
             } else {

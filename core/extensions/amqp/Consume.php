@@ -34,7 +34,7 @@ class Consume extends BaseMq
 
     public function doProcess($msg)
     {
-        $this->exec($this->consumeClass, $this->consumeFunction, $msg);
+        return $this->exec($this->consumeClass, $this->consumeFunction, $msg);
     }
 
     public function exec($className, $methodName, $msg)
@@ -49,7 +49,8 @@ class Consume extends BaseMq
         //3.获取反射实例方法
         $doAsyncMethod = $ref->getmethod($methodName);
         //4.执行方法
-        $doAsyncMethod->invoke($instance, $msg);
+        $res = $doAsyncMethod->invoke($instance, $msg);
+        return $res;
     }
 }
 

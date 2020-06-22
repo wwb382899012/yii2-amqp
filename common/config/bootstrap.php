@@ -5,3 +5,6 @@ Yii::setAlias('@backend', dirname(dirname(__DIR__)) . '/backend');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 //新增命名空间
 Yii::setAlias('@core', dirname(dirname(__DIR__)) . '/core');
+
+//新增命名空间
+Yii::setAlias('@PhpAmqpLib', dirname(dirname(__DIR__)) . '/core/extensions/PhpAmqpLib');

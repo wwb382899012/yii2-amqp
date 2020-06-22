@@ -10,17 +10,21 @@ namespace console\controllers;
 
 use core\controllers\ConsoleController;
 
-class ConsumeController extends ConsoleController{
+class ConsumeController extends ConsoleController
+{
 
     public function actions()
     {
         return [
             //同步租户数据
-            'consume-normal'=>[
-                'class'=>'console\controllers\consume\ConsumeNormal'
+            'consume-normal' => [
+                'class' => 'console\controllers\consume\ConsumeNormal'
             ],
-            'consume-transfer'=>[
-                'class'=>'console\controllers\consume\ConsumeTransfer'
+            'consume-transfer' => [
+                'class' => 'console\controllers\consume\ConsumeTransfer'
+            ],
+            'consume-transfer-two' => [
+                'class' => 'console\controllers\consume\ConsumeTransferTwo'
             ]
 
         ];

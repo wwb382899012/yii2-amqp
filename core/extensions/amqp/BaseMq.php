@@ -113,8 +113,13 @@ abstract class BaseMq
     public function processMessage($envelope, $queue)
     {
         $msg = $envelope->getBody();
-        $this->doProcess($msg);
-        $queue->ack($envelope->getDeliveryTag()); //手动发送ACK应答
+        $res = $this->doProcess($msg);
+        if ($res) {
+            $queue->ack($envelope->getDeliveryTag()); //手动发送ACK应答
+        } else {
+            //$queue->nack($envelope->getDeliveryTag(), AMQP_REQUEUE); //重新放回队列,nack 方法将消息放回队列后, 队列会将消息再次推送给消费者. 如果此时队列只有一个消费者, 将会造成死循环.
+        }
+
     }
 
     //处理消息的真正函数，在消费者里使用
@@ -124,12 +129,16 @@ abstract class BaseMq
      * @param $message  string or Array
      * @return mixed
      */
-    public function sendMessage($message)
+    public function sendMessage($message, $durable = false)
     {
         if (!is_string($message) && is_array($message)) {
             $message = json_encode($message);
         }
-        $res = $this->exchange->publish($message, $this->routeKey);
+        if ($durable) {
+            $res = $this->exchange->publish($message, $this->routeKey, AMQP_NOPARAM, ['delivery_mode' => 2]);
+        } else {
+            $res = $this->exchange->publish($message, $this->routeKey);
+        }
         return $res;
     }
 

@@ -12,12 +12,16 @@ class MqController extends WebBaseController
     {
         return [
             // demo列表
-            'demo-list' => [
-                'class' => 'frontend\controllers\mq\DemoList',
+            'normal' => [
+                'class' => 'frontend\controllers\mq\Normal',
             ],
             // 转账
             'transfer' => [
                 'class' => 'frontend\controllers\mq\Transfer',
+            ],
+            // 生产者确认机制
+            'publish-ack' => [
+                'class' => 'frontend\controllers\mq\PublishAck',
             ],
 
         ];

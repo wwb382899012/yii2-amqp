@@ -47,9 +47,12 @@ class Transfer extends WebBaseAction
 
             $messageData = ['receive_user_id' => 2, 'price' => $price];
             $service = new SendMqService();
-            $res = $service->sendNormalMessage($messageData);
+            //1、消息持久化
+            $res = $service->sendTransferMessage($messageData, true);
+            //2、消息不持久化
+            //$res = $service->sendTransferMessage($messageData, false);
             if ($res) {
-                echo   '生产mq消息一条'."<br />".$content; 
+                echo '生产mq消息一条' . "<br />" . $content;
             }
 
 

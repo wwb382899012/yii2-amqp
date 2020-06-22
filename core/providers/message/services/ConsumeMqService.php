@@ -16,6 +16,7 @@ class ConsumeMqService extends BaseService
 {
     const CONSUME_BUSINESS_TYPE_NORMAL = 'normal';
     const CONSUME_BUSINESS_TYPE_TRANSFER = 'transfer';//转账
+    const CONSUME_BUSINESS_TYPE_TRANSFER_TWO = 'transfer2';//转账，第二个消费者
 
     public $amqp_consume_config = [
 
@@ -28,6 +29,11 @@ class ConsumeMqService extends BaseService
             'class' => ConsumeUserAccountService::class,
             'method' => 'transfer'
         ],
+
+        self::CONSUME_BUSINESS_TYPE_TRANSFER_TWO => [
+            'class' => ConsumeUserAccountService::class,
+            'method' => 'transfer2'
+        ],
     ];
 
     /** 消费处理
@@ -35,13 +41,13 @@ class ConsumeMqService extends BaseService
      * @return bool
      * @throws \Exception
      */
-    public function consumeMessage($businessType = null)
+    public function consumeMessage($businessType = null, $ack = true)
     {
         try {
             if (isset($this->amqp_consume_config[$businessType])) {
                 $config = $this->amqp_consume_config[$businessType];
                 $consume = new Consume($config);
-                $res = $consume->dealMq(true); //true自动应答
+                $res = $consume->dealMq($ack); //true自动应答
                 if ($res) {
                     return true;
                 } else {
