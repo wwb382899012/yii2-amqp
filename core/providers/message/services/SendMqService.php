@@ -29,7 +29,27 @@ class SendMqService extends BaseService
                 return false;
             }
         } catch (\Exception $e) {
-            throw new \Exception('消息入列失败:' . $e->getMessage());
+            throw new \Exception('普通消息入列失败:' . $e->getMessage());
+        }
+    }
+
+    /** 发送事物消息
+     * @param $data string or Array
+     * @return bool
+     * @throws \Exception
+     */
+    public function sendTransMessage($data)
+    {
+        try {
+            $public = new Publish();
+            $res = $public->sendMessageTrans($data);
+            if ($res) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('事物消息入列失败:' . $e->getMessage());
         }
     }
 

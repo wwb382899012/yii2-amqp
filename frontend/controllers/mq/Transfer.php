@@ -25,10 +25,10 @@ class Transfer extends WebBaseAction
 
     public function run()
     {
+        $trans = UserEntity::beginTransaction();
         try {
             $price = 10;
             $userName = 'A';
-            $trans = UserEntity::beginTransaction();
             $this->checkParams();
             $user = UserEntity::findOne(['user_name' => $userName, 'is_deleted' => BaseEntity::UN_DELETED]);
             if (empty($user)) {
@@ -38,11 +38,9 @@ class Transfer extends WebBaseAction
             $userAccount = UserAccountEntity::findOne(['user_id' => $user->id, 'is_deleted' => BaseEntity::UN_DELETED]);
             $userAccount->account = ($userAccount->account) - $price;
             $userAccount->save();
-
             //日志
             $content = '用户' . $userName . '账户支出' . $price . '元';
             UserAccountLogOperation::addLog($content);
-
             $trans->commit();
 
             $messageData = ['receive_user_id' => 2, 'price' => $price];

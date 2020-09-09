@@ -28,7 +28,7 @@ class PublishAck extends WebBaseAction
     public function run()
     {
         try {
-            $conn = new AMQPStreamConnection('127.0.0.1',5672,'test','123456');
+            $conn = new AMQPStreamConnection('127.0.0.1', 5672, 'test', '123456');
             //建立通道
             $channel = $conn->channel();
             //确认投放队列，并将队列持久化
@@ -44,16 +44,17 @@ class PublishAck extends WebBaseAction
                     echo "Message nacked with content " . $message->body . PHP_EOL;
                 }
             );
+
             //开启消息确认
             $channel->confirm_select();
             //建立消息，并消息持久化
-            $msg = new AMQPMessage('eee',array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
-            $channel->basic_publish($msg, 'money.two', 'web');
+            $msg = new AMQPMessage('eee', array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT));
+            $channel->basic_publish($msg, 'money', 'web');//
 
             echo "发送生产消息，";
             //阻塞等待消息确认
-            $channel->wait_for_pending_acks();
-
+            //$channel->wait_for_pending_acks();
+            $channel->wait();
             $channel->close();
             $conn->close();
 

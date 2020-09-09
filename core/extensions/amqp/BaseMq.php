@@ -6,6 +6,7 @@ use AMQPChannel;
 use AMQPConnection;
 use AMQPExchange;
 use AMQPQueue;
+use core\providers\user\entities\UserAccountEntity;
 
 abstract class BaseMq
 {
@@ -65,6 +66,7 @@ abstract class BaseMq
 
         //创建信道
         $this->channel = new AMQPChannel($this->connection);
+
         //创建交换机
         $this->createExchange();
         //生产时不需要队列,故队列名为空,只有消费时需要队列名
@@ -117,7 +119,7 @@ abstract class BaseMq
         if ($res) {
             $queue->ack($envelope->getDeliveryTag()); //手动发送ACK应答
         } else {
-            //$queue->nack($envelope->getDeliveryTag(), AMQP_REQUEUE); //重新放回队列,nack 方法将消息放回队列后, 队列会将消息再次推送给消费者. 如果此时队列只有一个消费者, 将会造成死循环.
+            $queue->nack($envelope->getDeliveryTag(), AMQP_REQUEUE); //重新放回队列,nack 方法将消息放回队列后, 队列会将消息再次推送给消费者. 如果此时队列只有一个消费者, 将会造成死循环.
         }
 
     }
@@ -140,6 +142,39 @@ abstract class BaseMq
             $res = $this->exchange->publish($message, $this->routeKey);
         }
         return $res;
+    }
+
+    /** 生产消息-事物
+     * @param $message
+     * @param bool $durable
+     * @return mixeda
+     * @throws \Exception
+     */
+    public function sendMessageTrans($message, $durable = false)
+    {
+        $this->channel->startTransaction();
+        try {
+            if (!is_string($message) && is_array($message)) {
+                $message = json_encode($message);
+            }
+            echo '开始生产消息；';
+            if ($durable) {
+                $res = $this->exchange->publish(
+                    $message, $this->routeKey,
+                    AMQP_NOPARAM,
+                    ['delivery_mode' => 2]
+                );
+            } else {
+                $res = $this->exchange->publish($message, $this->routeKey);
+            }
+            UserAccountEntity::findOne(['userIdxxx' => '1']);//异常sql
+            $this->channel->commitTransaction();
+            echo '消息生产成功';
+            return $res;
+        } catch (\Exception $e) {
+            $this->channel->rollbackTransaction();
+            throw new \Exception($e->getMessage());
+        }
     }
 
 

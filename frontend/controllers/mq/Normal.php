@@ -37,7 +37,7 @@ class Normal extends WebBaseAction
             $service = new SendMqService();
             $res = $service->sendNormalMessage($messageData);
             if ($res) {
-                echo 'success';
+                echo '消息已入列，消息内容:' . json_encode($messageData);
             }
 
 

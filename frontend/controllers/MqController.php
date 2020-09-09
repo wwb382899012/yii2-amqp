@@ -11,9 +11,13 @@ class MqController extends WebBaseController
     public function actions()
     {
         return [
-            // demo列表
+            //正常消息
             'normal' => [
                 'class' => 'frontend\controllers\mq\Normal',
+            ],
+            //生产者事物
+            'trans' => [
+                'class' => 'frontend\controllers\mq\Trans',
             ],
             // 转账
             'transfer' => [
